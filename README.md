@@ -72,6 +72,51 @@ Two places to update if your inbox address changes:
 
 ---
 
+## Running Locally on Windows
+
+Since the site uses PHP for form handling, you need a PHP-capable server locally. Choose one of the options below.
+
+---
+
+### Option A — PHP Built-in Server (Recommended, no install needed if PHP is present)
+
+1. Open a terminal (Git Bash, PowerShell, or Command Prompt) in the project folder.
+2. Run:
+   ```bash
+   php -S localhost:8000
+   ```
+3. Open `http://localhost:8000` in your browser.
+
+> To check if PHP is installed: run `php -v`. If not installed, download from [php.net/downloads](https://www.php.net/downloads) and add it to your PATH, or install via [Scoop](https://scoop.sh): `scoop install php`.
+
+**Limitation:** PHP's `mail()` won't actually send emails locally. The contact form will process but emails won't be delivered — that's expected.
+
+---
+
+### Option B — VS Code Live Server Extension
+
+> Best for **static preview only** (HTML/CSS/JS). PHP forms will not work.
+
+1. Install the [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension in VS Code.
+2. Open the project folder in VS Code.
+3. Right-click `index.html` in the Explorer → **Open with Live Server**.
+4. The browser opens at `http://127.0.0.1:5500`.
+
+**Limitation:** `.php` files are served as plain text. Use Option A or C if you need to test the subscribe/contact forms.
+
+---
+
+### Option C — XAMPP (Full PHP + Apache stack)
+
+1. Download and install [XAMPP](https://www.apachefriends.org/).
+2. Copy the project folder into `C:\xampp\htdocs\MiracleNatureLabs\`.
+3. Open the XAMPP Control Panel and start **Apache**.
+4. Open `http://localhost/MiracleNatureLabs/` in your browser.
+
+**Advantage:** Closest to the live Namecheap shared hosting environment. PHP forms work fully.
+
+---
+
 ## Deploying to Namecheap Shared Hosting
 Using SCP from gitbash:
 go to files dir and then run (shared IP Address from CPanel right side):
