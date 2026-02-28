@@ -118,7 +118,7 @@ Since the site uses PHP for form handling, you need a PHP-capable server locally
 ---
 
 ## Deploying to Namecheap Shared Hosting
-Using SCP from gitbash:
+Using SCP from gitbash:  
 go to files dir and then run (shared IP Address from CPanel right side):
 scp -r -P 21098 * miranaou@162.0.232.35:/home/miranaou/miraclenaturelabs.com/
 
