@@ -1,6 +1,6 @@
 # Miracle Nature Labs — Coming Soon Website
 
-Premium sexual wellness brand landing page. Built for shared hosting (Apache + PHP).
+Premium natural health and wellness brand landing page. Built for shared hosting (Apache + PHP).
 
 ---
 
