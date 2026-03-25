@@ -704,6 +704,24 @@ h1, h2, h3 {
     color: #e07a6e;
 }
 
+/* ── PAGE HEADER (for inner pages) ───────────────────────────── */
+.page-header {
+    position: relative;
+    z-index: 1;
+    padding: 3rem 1.5rem 3.5rem;
+    text-align: center;
+    background:
+        radial-gradient(ellipse 70% 80% at 50% 0%, rgba(45,122,58,0.12) 0%, transparent 70%),
+        var(--bg-deep);
+    border-bottom: 1px solid var(--gold-border);
+}
+.page-header-logo {
+    height: 48px;
+    width: auto;
+    margin: 0 auto 1.5rem;
+    filter: drop-shadow(0 0 16px rgba(201,146,10,0.3));
+}
+
 /* ── FOOTER ─────────────────────────────────────────────────── */
 .footer {
     position: relative;

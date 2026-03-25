@@ -246,3 +246,24 @@
 
     targets.forEach(function (el) { observer.observe(el); });
 }());
+
+
+/* ── 5. SHARED FOOTER INCLUDE ───────────────────────────────── */
+(function () {
+    var container = document.getElementById('footer-container');
+    if (!container) return;
+
+    fetch('footer.html', { cache: 'no-cache' })
+        .then(function (res) {
+            if (!res.ok) throw new Error('Footer module not found');
+            return res.text();
+        })
+        .then(function (html) {
+            container.innerHTML = html;
+            var yearEl = container.querySelector('#footer-year');
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
+        })
+        .catch(function (err) {
+            console.error('Failed to load shared footer:', err);
+        });
+}());

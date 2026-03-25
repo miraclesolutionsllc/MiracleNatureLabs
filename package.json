@@ -1,0 +1,12 @@
+{
+  "name": "miracle-nature-labs-tests",
+  "version": "1.0.0",
+  "description": "Test suite for Miracle Nature Labs website",
+  "scripts": {
+    "test": "cypress run",
+    "test:open": "cypress open"
+  },
+  "devDependencies": {
+    "cypress": "^13.0.0"
+  }
+}

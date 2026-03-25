@@ -32,6 +32,16 @@ $f_email   = '';
 $f_phone   = '';
 $f_message = '';
 
+// Safe UTF-8 string length helper; avoids fatal errors when mbstring is unavailable.
+if (!function_exists('safe_strlen')) {
+    function safe_strlen($value) {
+        if (is_string($value) && function_exists('mb_strlen')) {
+            return mb_strlen($value, 'UTF-8');
+        }
+        return is_string($value) ? strlen($value) : 0;
+    }
+}
+
 /* ══════════════════════════════════════════════════════════════
    POST HANDLER
    ══════════════════════════════════════════════════════════════ */
@@ -60,11 +70,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = trim($_POST['message'] ?? '');
 
         /* — Validate — */
-        if ($name === '' || mb_strlen($name) > 100) {
+        if ($name === '' || safe_strlen($name) > 100) {
             $errors[] = 'Please enter your full name (max 100 characters).';
         }
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || mb_strlen($email) > 254) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || safe_strlen($email) > 254) {
             $errors[] = 'Please enter a valid email address.';
         }
 
@@ -73,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = 'Please enter a valid phone number, or leave the field empty.';
         }
 
-        if ($message === '' || mb_strlen($message) > 5000) {
+        if ($message === '' || safe_strlen($message) > 5000) {
             $errors[] = 'Please enter a message (max 5,000 characters).';
         }
 
@@ -231,7 +241,26 @@ HTML;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact Miracle Nature Labs — send questions, wholesale inquiries, and partnership opportunities.">
+    <meta name="keywords" content="contact, customer support, Miracle Nature Labs, partnership, inquiries">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Miracle Nature Labs">
+    <link rel="canonical" href="https://miraclenaturelabs.com/contact.php">
+
+    <meta property="og:site_name" content="Miracle Nature Labs">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Contact Us — Miracle Nature Labs">
+    <meta property="og:description" content="Contact Miracle Nature Labs — send questions, wholesale inquiries, and partnership opportunities.">
+    <meta property="og:url" content="https://miraclenaturelabs.com/contact.php">
+    <meta property="og:image" content="https://miraclenaturelabs.com/assets/miracle_nature_labs_transparent_logo.png">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Contact Us — Miracle Nature Labs">
+    <meta name="twitter:description" content="Contact Miracle Nature Labs — send questions, wholesale inquiries, and partnership opportunities.">
+    <meta name="twitter:image" content="https://miraclenaturelabs.com/assets/miracle_nature_labs_transparent_logo.png">
+
     <title>Contact Us — <?php echo SITE_NAME; ?></title>
+    <link rel="icon" type="image/jpeg" href="assets/logo_no_text_full.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -389,7 +418,7 @@ HTML;
         </svg>
         Back to home
     </a>
-    <img src="assets/logo.png" alt="<?php echo SITE_NAME; ?>" class="page-header-logo">
+    <img src="assets/miracle_nature_labs_transparent_logo.png" alt="<?php echo SITE_NAME; ?>" class="page-header-logo">
     <p class="section-eyebrow">Get in Touch</p>
     <h1 class="section-title">Contact <span class="gold-text">Us</span></h1>
     <p class="section-sub" style="margin-bottom:0">
@@ -531,37 +560,7 @@ HTML;
     </div>
 </section>
 
-<!-- ═══════════════ FOOTER ════════════════════════════════════ -->
-<footer class="footer">
-    <div class="container">
-        <div class="footer-top">
-            <img src="assets/logo.png" alt="<?php echo SITE_NAME; ?>" class="footer-logo">
-            <div class="social-links">
-                <a href="#" class="social-link" aria-label="Instagram">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
-                    Instagram
-                </a>
-                <a href="#" class="social-link" aria-label="Facebook">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                    Facebook
-                </a>
-                <a href="#" class="social-link" aria-label="X / Twitter">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l16 16M4 20L20 4"/></svg>
-                    Twitter / X
-                </a>
-            </div>
-        </div>
-        <div class="footer-divider"></div>
-        <div class="footer-bottom">
-            <p class="footer-copy">&copy; 2026 <?php echo SITE_NAME; ?>. All rights reserved.</p>
-            <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
-                <a href="contact.php">Contact Us</a>
-            </div>
-        </div>
-    </div>
-</footer>
+<div id="footer-container"></div>
 
 <script src="script.js"></script>
 <script>

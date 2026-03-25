@@ -117,7 +117,41 @@ Since the site uses PHP for form handling, you need a PHP-capable server locally
 
 ---
 
-## Deploying to Namecheap Shared Hosting
+## Running Tests
+
+The project includes automated tests using Cypress to check for missing images and broken links across all webpages.
+
+### Prerequisites
+- Node.js installed (download from [nodejs.org](https://nodejs.org/))
+- PHP server running locally (see "Running Locally on Windows" above)
+
+### Setup
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Running Tests
+1. Start your local PHP server (e.g., `php -S localhost:8000`)
+2. In a new terminal, run the tests:
+   ```bash
+   npm test
+   ```
+   This runs tests in headless mode and outputs results to the console.
+
+### Interactive Testing
+To run tests in the Cypress Test Runner (with visual interface):
+```bash
+npm run test:open
+```
+This opens the Cypress GUI where you can select and run individual tests.
+
+### What the Tests Check
+- **Missing Images:** Verifies all `<img>` elements have valid `src` attributes that return HTTP 200
+- **Broken Links:** Checks all `<a>` elements with `href` attributes return valid HTTP status codes (200, 301, 302)
+- Tests run on: `index.html`, `terms.html`, `privacy.html`, `contact.php`
+
+---
 Using SCP from gitbash:  
 go to files dir and then run (shared IP Address from CPanel right side):
 scp -r -P 21098 * miranaou@162.0.232.35:/home/miranaou/miraclenaturelabs.com/
