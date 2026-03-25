@@ -10,14 +10,24 @@ Premium natural health and wellness brand landing page. Built for shared hosting
 MiracleNatureLabs/
 ├── index.html          ← Main coming soon page
 ├── contact.php         ← Contact form page (emails to contact@miraclenaturelabs.com)
-├── style.css           ← All styles (shared by both pages)
+├── privacy.html        ← Privacy policy page
+├── terms.html          ← Terms & conditions page
+├── footer.html         ← Shared footer component
+├── style.css           ← All styles (shared by all pages)
 ├── script.js           ← Particles, countdown, subscribe form logic
 ├── subscribe.php       ← Subscribe form handler (writes to data/subscribers.txt)
-├── assets/
-│   └── logo.png        ← ★ Place your logo here
-└── data/
-    ├── .htaccess       ← Blocks direct browser access to this folder
-    └── subscribers.txt ← Auto-created on first signup
+├── package.json        ← Node.js dependencies for testing
+├── cypress.config.js   ← Cypress testing configuration
+├── README.md           ← This file
+├── .gitignore          ← Git ignore rules
+├── assets/             ← Static assets (logos, images)
+├── cypress/            ← Cypress test configuration
+│   └── screenshots/    ← Test failure screenshots (auto-generated)
+├── data/               ← Server-side data storage
+│   ├── .htaccess       ← Blocks direct browser access to this folder
+│   └── subscribers.txt ← Auto-created on first signup
+└── tests/              ← Cypress test files
+    └── website-tests.cy.js ← End-to-end tests for all pages
 ```
 
 ---
