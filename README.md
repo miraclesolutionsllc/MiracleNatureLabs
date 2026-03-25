@@ -60,6 +60,26 @@ John Doe|john@example.com|2026-03-16 11:05:44
 
 ---
 
+## What the Tests Check
+
+The Cypress end-to-end tests in `tests/website-tests.cy.js` verify the following for all pages (`/`, `/terms.html`, `/privacy.html`, `/contact.php`):
+
+- **Page loading**: Pages load successfully and URLs are correct.
+- **Images**: All images exist and are accessible (no broken images).
+- **Links**: All external links are valid and return 200/301/302 status codes.
+- **Favicon**: Favicon link exists and the file is accessible.
+- **SEO meta tags**: Presence of title, viewport meta tag, and description meta tag.
+- **Accessibility**: Headings exist, images have alt text, and links have text or images.
+- **Page load time**: Logs the page load time for performance monitoring.
+
+**Contact page specific tests:**
+- **Form presence**: Contact form exists with required fields (email, name, message).
+- **Validation**: Submitting empty required fields shows validation error messages.
+
+Run tests with: `npm test` or `npx cypress run`.
+
+---
+
 ## Before Uploading
 
 ### 1. Add your logo
@@ -81,6 +101,7 @@ Two places to update if your inbox address changes:
 - `contact.php` line 9: update `SITE_URL` to your live domain
 
 ---
+
 
 ## Running Locally on Windows
 
@@ -162,11 +183,50 @@ This opens the Cypress GUI where you can select and run individual tests.
 - Tests run on: `index.html`, `terms.html`, `privacy.html`, `contact.php`
 
 ---
-Using SCP from gitbash:  
+## Deployment
+
+## Deployment to Namecheap
+
+### Files to Upload
+Upload these files and folders to your Namecheap hosting public_html or miraclenaturelabs.com directory:
+
+- `index.html`
+- `contact.php`
+- `privacy.html`
+- `terms.html`
+- `footer.html`
+- `style.css`
+- `script.js`
+- `subscribe.php`
+- `assets/` (entire folder)
+- `data/.htaccess` (to protect the data folder)
+
+**Do not upload:** `tests/`, `cypress/`, `node_modules/`, `README.md`, `package.json`, `cypress.config.js`, `.gitignore`, `deploy/`.
+
+### Using SCP from Git Bash
+1. Ensure you have SSH access enabled in Namecheap cPanel.
+2. Open Git Bash in the project root.
+3. Run the deploy script:
+   ```bash
+   cd deploy
+   chmod +x deploy.sh
+   ./deploy.sh
+   ```
+   This uploads only the necessary files via SCP.
+
+### Using UI (cPanel File Manager)
+1. Log in to Namecheap cPanel.
+2. Go to **Files** > **File Manager**.
+3. Navigate to your website's root directory (e.g., `public_html` or `miraclenaturelabs.com`).
+4. Upload the files listed above using the **Upload** button or drag-and-drop.
+
+Ensure PHP is enabled on your hosting plan.
+
+### Using SCP from gitbash:
 go to files dir and then run (shared IP Address from CPanel right side):
 scp -r -P 21098 * miranaou@162.0.232.35:/home/miranaou/miraclenaturelabs.com/
 
-Using UI:
+### Using UI:
 1. Log in to your Namecheap cPanel.
 2. Open **File Manager** and navigate to `public_html/` (or your domain's root folder).
 3. Upload all files and folders, preserving the directory structure above.

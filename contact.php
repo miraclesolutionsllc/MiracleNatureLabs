@@ -285,18 +285,6 @@ HTML;
             margin: 0 auto 1.5rem;
             filter: drop-shadow(0 0 16px rgba(201,146,10,0.3));
         }
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.78rem;
-            letter-spacing: 0.08em;
-            color: var(--text-subtle);
-            margin-bottom: 1.5rem;
-            transition: color var(--transition);
-        }
-        .back-link:hover { color: var(--gold-bright); }
-        .back-link svg   { flex-shrink: 0; }
 
         /* Contact section wrapper */
         .contact-section {
@@ -412,13 +400,9 @@ HTML;
 
 <!-- ═══════════════ PAGE HEADER ═══════════════════════════════ -->
 <header class="page-header">
-    <a href="index.html" class="back-link">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Back to home
+    <a href="index.html">
+        <img src="assets/miracle_nature_labs_transparent_logo.png" alt="<?php echo SITE_NAME; ?>" class="page-header-logo">
     </a>
-    <img src="assets/miracle_nature_labs_transparent_logo.png" alt="<?php echo SITE_NAME; ?>" class="page-header-logo">
     <p class="section-eyebrow">Get in Touch</p>
     <h1 class="section-title">Contact <span class="gold-text">Us</span></h1>
     <p class="section-sub" style="margin-bottom:0">
@@ -442,9 +426,6 @@ HTML;
                 </div>
                 <h3>Message <span class="gold-text">Sent!</span></h3>
                 <p>Thank you for reaching out. We&rsquo;ve received your message and will get back to you as soon as possible.</p>
-                <a href="index.html" class="hero-cta" style="font-size:0.85rem;padding:0.75rem 1.8rem;">
-                    Back to Home
-                </a>
             </div>
 
             <?php else: ?>
