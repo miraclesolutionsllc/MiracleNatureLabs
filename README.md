@@ -76,7 +76,9 @@ The Cypress end-to-end tests in `tests/website-tests.cy.js` verify the following
 - **Form presence**: Contact form exists with required fields (email, name, message).
 - **Validation**: Submitting empty required fields shows validation error messages.
 
-Run tests with: `npm test` or `npx cypress run`.
+Run tests with
+- Headless mode: `npm test` or `npx cypress run`.
+- with UI: `npm run test:open`
 
 ---
 

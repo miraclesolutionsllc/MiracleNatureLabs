@@ -11,7 +11,12 @@ scp -r -P 21098 \
     ../privacy.html \
     ../terms.html \
     ../footer.html \
+    ../about.html \
+    ../header.html \
+    ../contact.css \
+    ../email-contact.css \
     ../style.css \
+    ../legal.css \
     ../script.js \
     ../subscribe.php \
     ../assets/ \

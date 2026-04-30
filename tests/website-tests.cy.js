@@ -3,6 +3,7 @@ describe('Miracle Nature Labs Website Tests', () => {
     '/',
     '/terms.html',
     '/privacy.html',
+    '/about.html',
     '/contact.php'
   ]
 
