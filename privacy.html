@@ -27,26 +27,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <style>
-    :root { --legal-bg: rgba(13, 38, 22, 0.9); }
-    body { font-family: 'Inter', system-ui, sans-serif; color: var(--text-primary); background: var(--bg-root); }
-    .page-content { padding: 3rem 1.5rem 4.5rem; }
-    .policy-card { background: var(--bg-section); border: 1px solid var(--gold-border); border-radius: var(--radius-card); box-shadow: var(--shadow-card); padding: 2rem; }
-    .policy-card h1 { color: var(--gold-bright); }
-    .policy-subtitle { color: var(--text-muted); margin-bottom: 1.25rem; }
-    .policy-section h2 { font-size: 1.7rem; margin-top: 1.4rem; margin-bottom: .8rem; }
-    .policy-section h3 { font-size: 1.1rem; margin-top: 1.1rem; }
-    .policy-section p, .policy-section ul { color: var(--text-primary); }
-    .policy-section ul { margin-left: 1rem; padding-left: 1rem; list-style: disc; }
-    .callout-box { background: rgba(240,196,64,0.12); border: 1px solid var(--gold-border); border-radius: 8px; padding: 1rem; margin: 1rem 0; }
-    .version-buttons { margin-top: 1.5rem; display: flex; gap: .75rem; flex-wrap: wrap; }
-    .version-buttons button { border: 1px solid var(--gold-border); background: rgba(201,146,10,0.15); color: var(--text-primary); border-radius: 999px; padding: .65rem 1rem; cursor: pointer; }
-    .version-buttons button:hover { background: rgba(201,146,10,0.25); }
-    .hidden { display: none; }
-  </style>
+  <link rel="stylesheet" href="legal.css">
 </head>
 <body>
   <canvas id="particles-canvas"></canvas>
+  <div id="header-container"></div>
 
   <header class="page-header">
       <a href="index.html">
@@ -59,11 +44,11 @@
 
   <main class="page-content">
     <div class="container policy-card">
-      <div class="flex justify-between items-center mb-6">
-        <div class="section-title" style="font-size:1.6rem;">Policy details</div>
-        <div class="text-sm text-gray-400">Last updated: 21 March 2026</div>
+      <div class="policy-card-header">
+        <div class="section-title policy-card-title">Policy details</div>
+        <div class="policy-updated">Last updated: 21 March 2026</div>
       </div>
-      <div id="location-notice" class="section-eyebrow" style="background: rgba(240,235,224,0.08); border:1px solid var(--gold-border); padding:.75rem 1rem; border-radius:10px; margin-bottom:1rem;"></div>
+      <div id="location-notice" class="section-eyebrow location-notice"></div>
 
     <!-- ==================== INDIA VERSION (DPDP Act 2023) ==================== -->
     <div id="india-privacy" class="policy-section">

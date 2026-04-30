@@ -12,7 +12,7 @@
 session_start();
 
 /* ── Configuration ───────────────────────────────────────────── */
-define('TO_EMAIL',  'contact@miraclenaturelabs.com');
+define('TO_EMAIL',  'info@miraclenaturelabs.com');
 define('SITE_NAME', 'Miracle Nature Labs');
 define('SITE_URL',  'https://www.miraclenaturelabs.com');   // update to your domain
 
@@ -109,10 +109,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            $user_agent = $_SERVER['HTTP_USER_AGENT']      ?? 'Unknown';
-            $referrer   = $_SERVER['HTTP_REFERER']         ?? 'Direct / Unknown';
-            $language   = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'Unknown';
-            $timestamp  = date('D, d M Y H:i:s T');
+            $user_agent      = $_SERVER['HTTP_USER_AGENT']      ?? 'Unknown';
+            $referrer        = $_SERVER['HTTP_REFERER']         ?? 'Direct / Unknown';
+            $language        = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'Unknown';
+            $timestamp       = date('D, d M Y H:i:s T');
+            $server_timezone = date_default_timezone_get();
+            $country         = $_SERVER['HTTP_CF_IPCOUNTRY'] ?? 'Unknown';
+            $host            = $_SERVER['HTTP_HOST'] ?? 'Unknown';
+            $request_uri     = $_SERVER['REQUEST_URI'] ?? 'Unknown';
+            $client_timezone = trim($_POST['browser_timezone'] ?? '');
+            $timezone_offset = trim($_POST['timezone_offset'] ?? '');
+            $client_language = trim($_POST['browser_language'] ?? '');
+            $client_platform = trim($_POST['platform'] ?? '');
+            $screen_size     = trim($_POST['screen_size'] ?? '');
 
             /* Safe-for-HTML versions */
             $h_name    = htmlspecialchars($name,       ENT_QUOTES, 'UTF-8');
@@ -123,6 +132,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $h_ref     = htmlspecialchars($referrer,   ENT_QUOTES, 'UTF-8');
             $h_lang    = htmlspecialchars($language,   ENT_QUOTES, 'UTF-8');
             $h_ip      = htmlspecialchars($ip,         ENT_QUOTES, 'UTF-8');
+            $h_country = htmlspecialchars($country,    ENT_QUOTES, 'UTF-8');
+            $h_host    = htmlspecialchars($host,       ENT_QUOTES, 'UTF-8');
+            $h_uri     = htmlspecialchars($request_uri, ENT_QUOTES, 'UTF-8');
+            $h_server_tz = htmlspecialchars($server_timezone, ENT_QUOTES, 'UTF-8');
+            $h_client_tz = htmlspecialchars($client_timezone ?: 'Unknown', ENT_QUOTES, 'UTF-8');
+            $h_tz_offset = htmlspecialchars($timezone_offset ?: 'Unknown', ENT_QUOTES, 'UTF-8');
+            $h_client_lang = htmlspecialchars($client_language ?: 'Unknown', ENT_QUOTES, 'UTF-8');
+            $h_platform = htmlspecialchars($client_platform ?: 'Unknown', ENT_QUOTES, 'UTF-8');
+            $h_screen = htmlspecialchars($screen_size ?: 'Unknown', ENT_QUOTES, 'UTF-8');
+            $email_css_path = __DIR__ . '/email-contact.css';
+            $email_css = is_readable($email_css_path) ? file_get_contents($email_css_path) : '';
 
             /* ── HTML email body ─────────────────────────── */
             $email_body = <<<HTML
@@ -132,28 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body    { font-family: Arial, Helvetica, sans-serif; background: #f0ede5; padding: 24px; }
-  .wrap   { max-width: 620px; margin: auto; background: #ffffff; border-radius: 10px; overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
-  .header { background: #0d2016; padding: 28px 36px; }
-  .header h1 { font-size: 20px; color: #f0c040; letter-spacing: 0.06em; font-weight: 700; }
-  .header p  { font-size: 12px; color: rgba(240,235,224,0.5); margin-top: 5px; }
-  .body   { padding: 32px 36px; }
-  .row    { margin-bottom: 22px; }
-  .label  { font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
-            color: #8b6914; margin-bottom: 5px; }
-  .value  { font-size: 15px; color: #1c1c1c; line-height: 1.65; }
-  .value a { color: #c9920a; text-decoration: none; }
-  .msg-box { background: #faf7ee; border-left: 4px solid #c9920a; border-radius: 4px;
-             padding: 14px 18px; font-size: 15px; color: #1c1c1c; line-height: 1.75; }
-  .divider { border: none; border-top: 1px solid #e8e0d0; margin: 28px 0; }
-  .meta-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  .meta-table td { padding: 6px 0; vertical-align: top; border-bottom: 1px solid #f0ede5; }
-  .meta-table td:first-child { color: #999; width: 130px; padding-right: 12px; white-space: nowrap; font-weight: 600; }
-  .meta-table td:last-child  { color: #444; word-break: break-word; }
-  .footer { background: #070f09; padding: 16px 36px; text-align: center; }
-  .footer p { font-size: 11px; color: rgba(240,235,224,0.3); }
+{$email_css}
 </style>
 </head>
 <body>
@@ -188,13 +187,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <hr class="divider">
 
-    <div class="row" style="margin-bottom:0">
-      <div class="label" style="margin-bottom:10px">Request Metadata</div>
+    <div class="row row--flush">
+      <div class="label label--spaced">Request Metadata</div>
       <table class="meta-table">
         <tr><td>Submitted At</td><td>{$timestamp}</td></tr>
         <tr><td>IP Address</td><td>{$h_ip}</td></tr>
+        <tr><td>Location</td><td>{$h_country}</td></tr>
+        <tr><td>Client Timezone</td><td>{$h_client_tz}</td></tr>
+        <tr><td>Timezone Offset</td><td>{$h_tz_offset}</td></tr>
+        <tr><td>Server Timezone</td><td>{$h_server_tz}</td></tr>
         <tr><td>Browser / UA</td><td>{$h_ua}</td></tr>
         <tr><td>Language</td><td>{$h_lang}</td></tr>
+        <tr><td>Browser Language</td><td>{$h_client_lang}</td></tr>
+        <tr><td>Platform</td><td>{$h_platform}</td></tr>
+        <tr><td>Screen Size</td><td>{$h_screen}</td></tr>
+        <tr><td>Host</td><td>{$h_host}</td></tr>
+        <tr><td>Request URI</td><td>{$h_uri}</td></tr>
         <tr><td>Referred From</td><td>{$h_ref}</td></tr>
       </table>
     </div>
@@ -265,138 +273,12 @@ HTML;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* ── Contact page extras ─────────────────────────── */
-
-        /* Compact page header (replaces full hero on inner pages) */
-        .page-header {
-            position: relative;
-            z-index: 1;
-            padding: 3rem 1.5rem 3.5rem;
-            text-align: center;
-            background:
-                radial-gradient(ellipse 70% 80% at 50% 0%, rgba(45,122,58,0.12) 0%, transparent 70%),
-                var(--bg-deep);
-            border-bottom: 1px solid var(--gold-border);
-        }
-        .page-header-logo {
-            height: 64px;
-            width: auto;
-            margin: 0 auto 1.5rem;
-            filter: drop-shadow(0 0 16px rgba(201,146,10,0.3));
-        }
-
-        /* Contact section wrapper */
-        .contact-section {
-            position: relative;
-            z-index: 1;
-            padding: 5rem 1.5rem 6rem;
-            background:
-                radial-gradient(ellipse 60% 50% at 50% 60%, rgba(201,146,10,0.06) 0%, transparent 70%),
-                var(--bg-section);
-        }
-
-        /* Textarea */
-        .field-group textarea {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(201,146,10,0.25);
-            border-radius: var(--radius-input);
-            color: var(--text-primary);
-            font-family: inherit;
-            font-size: 0.95rem;
-            padding: 0.85rem 1.1rem;
-            width: 100%;
-            outline: none;
-            resize: vertical;
-            min-height: 150px;
-            line-height: 1.65;
-            transition: border-color var(--transition), box-shadow var(--transition);
-        }
-        .field-group textarea::placeholder { color: var(--text-subtle); }
-        .field-group textarea:focus {
-            border-color: var(--gold-mid);
-            box-shadow: 0 0 0 3px rgba(201,146,10,0.12);
-        }
-        .field-group textarea.input-error,
-        .field-group input.input-error {
-            border-color: #c0392b;
-            box-shadow: 0 0 0 3px rgba(192,57,43,0.12);
-        }
-
-        /* Three-column row for email + phone */
-        .sub-form-fields.two-col {
-            grid-template-columns: 1fr 1fr;
-        }
-        .sub-form-fields.one-col {
-            grid-template-columns: 1fr;
-        }
-
-        /* Error list */
-        .error-list {
-            background: rgba(192,57,43,0.15);
-            border: 1px solid rgba(192,57,43,0.4);
-            border-radius: var(--radius-input);
-            padding: 1rem 1.25rem;
-            margin-bottom: 1.25rem;
-            color: #e07a6e;
-            font-size: 0.88rem;
-            line-height: 1.7;
-        }
-        .error-list ul { list-style: disc; padding-left: 1.2rem; }
-
-        /* Success card */
-        .success-box {
-            text-align: center;
-            padding: 2rem;
-        }
-        .success-icon {
-            width: 64px; height: 64px;
-            background: rgba(45,122,58,0.2);
-            border: 1px solid rgba(74,170,90,0.4);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-        }
-        .success-box h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            margin-bottom: 0.75rem;
-        }
-        .success-box p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Char counter */
-        .char-counter {
-            font-size: 0.72rem;
-            color: var(--text-subtle);
-            text-align: right;
-            margin-top: 0.3rem;
-        }
-        .char-counter.near-limit { color: var(--gold-mid); }
-        .char-counter.at-limit   { color: #e07a6e; }
-
-        /* Optional badge on phone label */
-        .optional {
-            font-size: 0.68rem;
-            color: var(--text-subtle);
-            font-weight: 400;
-            margin-left: 0.35rem;
-            letter-spacing: 0;
-        }
-
-        @media (max-width: 560px) {
-            .sub-form-fields.two-col { grid-template-columns: 1fr; }
-        }
-    </style>
+    <link rel="stylesheet" href="contact.css">
 </head>
 <body>
 
 <canvas id="particles-canvas"></canvas>
+<div id="header-container"></div>
 
 <!-- ═══════════════ PAGE HEADER ═══════════════════════════════ -->
 <header class="page-header">
@@ -405,7 +287,7 @@ HTML;
     </a>
     <p class="section-eyebrow">Get in Touch</p>
     <h1 class="section-title">Contact <span class="gold-text">Us</span></h1>
-    <p class="section-sub" style="margin-bottom:0">
+    <p class="section-sub section-sub--flush">
         Have a question, partnership enquiry, or just want to say hello?<br>
         We&rsquo;d love to hear from you.
     </p>
@@ -414,7 +296,7 @@ HTML;
 <!-- ═══════════════ CONTACT FORM ══════════════════════════════ -->
 <section class="contact-section">
     <div class="container">
-        <div class="subscribe-card" style="max-width:680px">
+        <div class="subscribe-card contact-card">
 
             <?php if ($success): ?>
             <!-- ── Success state ── -->
@@ -431,10 +313,10 @@ HTML;
             <?php else: ?>
             <!-- ── Form state ── -->
             <p class="section-eyebrow">Send a Message</p>
-            <h2 class="section-title" style="font-size:1.6rem;margin-bottom:0.5rem;">
+            <h2 class="section-title contact-form-title">
                 We&rsquo;re Here to <span class="gold-text">Help</span>
             </h2>
-            <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:1.75rem;">
+            <p class="form-intro">
                 All fields marked are required except phone.
             </p>
 
@@ -452,15 +334,20 @@ HTML;
 
                 <!-- CSRF token — hidden security field -->
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrf_token, ENT_QUOTES, 'UTF-8'); ?>">
+                <input type="hidden" id="browser-timezone" name="browser_timezone">
+                <input type="hidden" id="timezone-offset" name="timezone_offset">
+                <input type="hidden" id="browser-language" name="browser_language">
+                <input type="hidden" id="platform" name="platform">
+                <input type="hidden" id="screen-size" name="screen_size">
 
                 <!-- Honeypot — hidden from real users, attracts bots -->
-                <div style="display:none;visibility:hidden;position:absolute;left:-9999px;" aria-hidden="true">
+                <div class="honeypot" aria-hidden="true">
                     <label for="website">Leave this empty</label>
                     <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
                 </div>
 
                 <!-- Row 1: Full Name -->
-                <div class="sub-form-fields one-col" style="margin-bottom:1rem;">
+                <div class="sub-form-fields one-col form-row">
                     <div class="field-group">
                         <label for="c-name">Full Name</label>
                         <input
@@ -477,7 +364,7 @@ HTML;
                 </div>
 
                 <!-- Row 2: Email + Phone -->
-                <div class="sub-form-fields two-col" style="margin-bottom:1rem;">
+                <div class="sub-form-fields two-col form-row">
                     <div class="field-group">
                         <label for="c-email">Email Address</label>
                         <input
@@ -509,7 +396,7 @@ HTML;
                 </div>
 
                 <!-- Row 3: Message -->
-                <div class="sub-form-fields one-col" style="margin-bottom:1.5rem;">
+                <div class="sub-form-fields one-col form-row form-row--message">
                     <div class="field-group">
                         <label for="c-message">Message</label>
                         <textarea
@@ -541,6 +428,30 @@ HTML;
     </div>
 </section>
 
+<section class="office-section">
+    <div class="container">
+        <p class="section-eyebrow">Office Locations</p>
+        <h2 class="section-title">Our <span class="gold-text">Locations</span></h2>
+        <div class="office-grid">
+            <div class="office-card">
+                <img src="assets/new_delhi.png" alt="New Delhi office location" class="office-image">
+                <h3>New Delhi</h3>
+                <address>D7/60, Sector 6, Rohini<br>New Delhi - 110085<br>India</address>
+            </div>
+            <div class="office-card">
+                <img src="assets/varanasi.jpeg" alt="Varanasi office location" class="office-image">
+                <h3>Varanasi</h3>
+                <address>N10/79, C-12, BLW <br>Varanasi - 221004<br>India</address>
+            </div>
+            <div class="office-card">
+                <img src="assets/usa.png" alt="USA office location in North Carolina" class="office-image">
+                <h3>USA</h3>
+                <address>11 Union St S, Ste 205<br>Concord, NC 28025<br>USA</address>
+            </div>
+        </div>
+    </div>
+</section>
+
 <div id="footer-container"></div>
 
 <script src="script.js"></script>
@@ -562,6 +473,25 @@ HTML;
 
     ta.addEventListener('input', update);
     update(); /* init with pre-filled value on validation failure */
+}());
+
+/* Browser-provided metadata for contact email context */
+(function () {
+    var tz = document.getElementById('browser-timezone');
+    var offset = document.getElementById('timezone-offset');
+    var lang = document.getElementById('browser-language');
+    var platform = document.getElementById('platform');
+    var screenSize = document.getElementById('screen-size');
+
+    if (tz && window.Intl && Intl.DateTimeFormat) {
+        tz.value = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    }
+    if (offset) offset.value = String(new Date().getTimezoneOffset());
+    if (lang) lang.value = navigator.language || '';
+    if (platform) platform.value = navigator.platform || '';
+    if (screenSize && window.screen) {
+        screenSize.value = window.screen.width + 'x' + window.screen.height;
+    }
 }());
 </script>
 

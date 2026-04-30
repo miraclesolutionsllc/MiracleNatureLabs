@@ -86,7 +86,7 @@
 /* ── 2. COUNTDOWN TIMER ─────────────────────────────────────── */
 (function () {
     /* ★ Change this date to your actual planned launch date ★ */
-    var LAUNCH_DATE = new Date('2026-09-01T00:00:00');
+    var LAUNCH_DATE = new Date('2026-06-17T00:00:00');
 
     var elDays    = document.getElementById('cd-days');
     var elHours   = document.getElementById('cd-hours');
@@ -222,7 +222,7 @@
 (function () {
     /* Add .animate-in to elements we want to reveal on scroll */
     var targets = [].slice.call(
-        document.querySelectorAll('.pillar, .product-card, .subscribe-card, .section-title, .about-body, .section-sub')
+        document.querySelectorAll('.pillar, .product-card, .subscribe-card, .statement-card, .office-card, .section-title, .about-body, .section-sub')
     );
 
     targets.forEach(function (el) {
@@ -249,6 +249,25 @@
 
 
 /* ── 5. SHARED FOOTER INCLUDE ───────────────────────────────── */
+/* Shared header include */
+(function () {
+    var container = document.getElementById('header-container');
+    if (!container) return;
+
+    fetch('header.html', { cache: 'no-cache' })
+        .then(function (res) {
+            if (!res.ok) throw new Error('Header module not found');
+            return res.text();
+        })
+        .then(function (html) {
+            container.innerHTML = html;
+        })
+        .catch(function (err) {
+            console.error('Failed to load shared header:', err);
+        });
+}());
+
+
 (function () {
     var container = document.getElementById('footer-container');
     if (!container) return;
